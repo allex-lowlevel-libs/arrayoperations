@@ -19,6 +19,15 @@
     "lib"
   ],
   "devDependencies": {
+    "allex_avltreelowlevellib": "^1.1.0",
+    "allex_checkslowlevellib": "^1.1.4",
+    "allex_doublelinkedlistbaselowlevellib": "^1.1.0",
+    "allex_errorlowlevellib": "^1.0.0",
+    "allex_inheritlowlevellib": "^3.0.1",
+    "allex_jsonizingerrorlowlevellib": "^1.0.0",
+    "allex_maplowlevellib": "^1.0.0",
+    "allex_objectmanipulationlowlevellib": "^3.1.0",
+    "allex_stringmanipulationlowlevellib": "^3.4.2",
     "chai": "3.x"
   },
   "author": "Andrija Petrovic <andrija.hers@gmail.com>",
