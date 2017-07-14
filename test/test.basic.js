@@ -73,6 +73,9 @@ describe('Basic tests', function () {
   it('findElementWithProperty', function () {
     expect(arrOp.findElementWithProperty([1, {name: 'a', height: 15}, null, {name: 'b', a: 8}], 'name', 'b')).to.deep.equal({name: 'b', a: 8});
   });
+  it('findLastElementWithProperty', function () {
+    expect(arrOp.findLastElementWithProperty([1, {name: 'a', height: 15}, null, {name: 'a', a: 8}], 'name', 'a')).to.deep.equal({name: 'a', a: 8});
+  });
   it('findElementAndIndexWithProperty', function () {
     expect(arrOp.findElementAndIndexWithProperty([1, {name: 'a', height: 15}, null, {name: 'b', a: 8}], 'name', 'b')).to.deep.equal({element:{name: 'b', a: 8}, index: 3});
   });

@@ -45,6 +45,21 @@ module.exports = function createArryOperations(extend, readPropertyFromDotDelimi
     return ret;
   }
 
+  function lastfinder (propname, propval, result, item) {
+    var und;
+    if (propval !== und && readPropertyFromDotDelimitedString(item, propname) === propval) {
+      return item;
+    }
+    return result;
+  }
+
+  function findLastElementWithProperty(a, propname, propval) {
+    if (!(a && a.reduce)) {
+      return;
+    }
+    return a.reduce(lastfinder.bind(null, propname, propval), void 0);
+  }
+
   function findElementAndIndexWithProperty(a, propname, propval) {
     if (!(a && a.some)) {
       return;
@@ -296,6 +311,7 @@ module.exports = function createArryOperations(extend, readPropertyFromDotDelimi
     union: union,
     appendNonExistingItems: appendNonExistingItems,
     findElementWithProperty: findElementWithProperty,
+    findLastElementWithProperty: findLastElementWithProperty,
     findElementAndIndexWithProperty: findElementAndIndexWithProperty,
     pivot : pivot,
     unpivot : unpivot,
