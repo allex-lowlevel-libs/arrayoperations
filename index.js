@@ -14,16 +14,6 @@ module.exports = function createArryOperations(extend, readPropertyFromDotDelimi
     a1 = null;
   }
 
-  function finderwithindex(findobj, propname, propval, item, index){
-    try {
-      if (item[propname] === propval) {
-        findobj.element = item;
-        findobj.index = index;
-        return true;
-      }
-    } catch (ignore) {}
-  }
-
   function finder(findobj, propname, propval, item){
     var und;
     //if (item[propname] === propval) {
@@ -60,12 +50,52 @@ module.exports = function createArryOperations(extend, readPropertyFromDotDelimi
     return a.reduce(lastfinder.bind(null, propname, propval), void 0);
   }
 
+  function finderwithindex(findobj, propname, propval, item, index){
+    try {
+      if (item[propname] === propval) {
+        findobj.element = item;
+        findobj.index = index;
+        return true;
+      }
+    } catch (ignore) {}
+  }
+
   function findElementAndIndexWithProperty(a, propname, propval) {
     if (!(a && a.some)) {
       return;
     }
     var und, findobj = {element: und, index: und};
     a.some(finderwithindex.bind(null, findobj, propname, propval));
+    return findobj;
+  }
+
+  function compare (a, b) {
+    if (a == b) {return 0;}
+    if (a > b) {return 1;}
+    return -1;
+  }
+
+  function finderwithindexandinsertindex(findobj, propname, propval, item, index){
+    var val, cmpval, und;
+    try {
+      val = item[propname];
+      if (val === propval) {
+        findobj.element = item;
+        findobj.index = index;
+        return true;
+      }
+      cmpval = compare(val, propval);
+      if (cmpval<0) {
+        findobj.insertafter = index;
+      }
+    } catch (ignore) {}
+  }
+  function findElementIndexAndInsertIndexWithProperty(a, propname, propval) {
+    if (!(a && a.some)) {
+      return;
+    }
+    var und, findobj = {element: und, index: und, insertafter: und};
+    a.some(finderwithindexandinsertindex.bind(null, findobj, propname, propval));
     return findobj;
   }
 
@@ -313,6 +343,7 @@ module.exports = function createArryOperations(extend, readPropertyFromDotDelimi
     findElementWithProperty: findElementWithProperty,
     findLastElementWithProperty: findLastElementWithProperty,
     findElementAndIndexWithProperty: findElementAndIndexWithProperty,
+    findElementIndexAndInsertIndexWithProperty: findElementIndexAndInsertIndexWithProperty,
     pivot : pivot,
     unpivot : unpivot,
     Pivoter : Pivoter,
