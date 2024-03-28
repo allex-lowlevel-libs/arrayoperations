@@ -1,4 +1,19 @@
 module.exports = function createArryOperations(extend, readPropertyFromDotDelimitedString, isFunction, Map, AllexJSONizingError) {
+
+  var helpers = require('./helpers')(extend, readPropertyFromDotDelimitedString, isFunction, Map, AllexJSONizingError);
+  function isArray (val) {return 'object' === typeof(val) && val instanceof Array;}
+  function helperselector (propname, propval, helpername) {
+    if (isArray(propname)) {
+      if (!isArray(propval)) {
+        throw new Error('propname-propval type mismatch');
+      }
+      if (propname.length != propval.length) {
+        throw new Error('propname-propval length mismatch');
+      }
+      return helpers.array[helpername];
+    }
+    return helpers.scalar[helpername];
+  }
   function union(a1, a2) {
     var ret = a1.slice();
     appendNonExistingItems(ret, a2);
@@ -44,20 +59,14 @@ module.exports = function createArryOperations(extend, readPropertyFromDotDelimi
   }
 
   function findLastElementWithProperty(a, propname, propval) {
+    var ret;
     if (!(a && a.reduce)) {
       return;
     }
-    return a.reduce(lastfinder.bind(null, propname, propval), void 0);
-  }
-
-  function finderwithindex(findobj, propname, propval, item, index){
-    try {
-      if (item[propname] === propval) {
-        findobj.element = item;
-        findobj.index = index;
-        return true;
-      }
-    } catch (ignore) {}
+    ret = a.reduce(lastfinder.bind(null, propname, propval), void 0);
+    propname = null;
+    propval = null;
+    return ret;
   }
 
   function findElementAndIndexWithProperty(a, propname, propval) {
@@ -65,37 +74,19 @@ module.exports = function createArryOperations(extend, readPropertyFromDotDelimi
       return;
     }
     var und, findobj = {element: und, index: und};
-    a.some(finderwithindex.bind(null, findobj, propname, propval));
+    a.some(helperselector(propname, propval, 'finderwithindex').bind(null, findobj, propname, propval));
     return findobj;
   }
 
-  function compare (a, b) {
-    if (a == b) {return 0;}
-    if (a > b) {return 1;}
-    return -1;
-  }
-
-  function finderwithindexandinsertindex(findobj, propname, propval, item, index){
-    var val, cmpval, und;
-    try {
-      val = item[propname];
-      if (val === propval) {
-        findobj.element = item;
-        findobj.index = index;
-        return true;
-      }
-      cmpval = compare(val, propval);
-      if (cmpval<0) {
-        findobj.insertafter = index;
-      }
-    } catch (ignore) {}
-  }
   function findElementIndexAndInsertIndexWithProperty(a, propname, propval) {
     if (!(a && a.some)) {
       return;
     }
-    var und, findobj = {element: und, index: und, insertafter: und};
-    a.some(finderwithindexandinsertindex.bind(null, findobj, propname, propval));
+    var und, findobj = {element: und, index: und, insertafter: und}, _fo = findobj;
+    a.some(helperselector(propname, propval, 'finderwithindexandinsertindex').bind(null, _fo, propname, propval));
+    _fo = null;
+    propname = null;
+    propval = null;
     return findobj;
   }
 
